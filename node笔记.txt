@@ -1,0 +1,3 @@
+全局对象： 
+  一.process
+    1.process全局对象包含三个流对象，分别对应 unix 标准流： stdin：标准输入， stdout：标准输出， stderr：标准错误（当涉及持续不断地对数据进行读写时，流（Steam）就出现了）。

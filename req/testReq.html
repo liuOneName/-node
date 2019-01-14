@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  请求数据
+  <div class="res">
+
+  </div>
+  <script> 
+    var body = document.querySelector('.res');
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function(newState){
+      console.log(ajax.readyState, ajax.responseText, newState);
+      body.innerHTML = ajax.responseText;
+    };
+    ajax.open('post', 'http://localhost:3000');
+    ajax.send(JSON.stringify({name: 'Bill', age: 23, id: 1}));
+    
+  </script>
+</body>
+</html>

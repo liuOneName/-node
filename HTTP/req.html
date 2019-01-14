@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>req</title>
+</head>
+<body>
+  aaa
+  <div class="container">
+
+  </div>
+  <script>
+    const div = document.querySelector('.container');
+    const req = new XMLHttpRequest();
+    req.open('GET', 'http://127.0.0.1:3000/get/11?name=Bill&age=23');
+    // ?name=Bill&age=23
+    req.setRequestHeader('Content-Type', 'application/json')
+    req.setRequestHeader('Authorization', 'aaaa')
+    // application/json
+    // www-form-urlencoded
+    // req.send(JSON.stringify({name: 'Bill', age: 23}));
+    req.send();
+    req.onreadystatechange = function(res){
+      console.log(res);
+      if(res.target.readyState === 4 && res.target.status === 200){
+        div.innerHTML = res.target.response;
+      }
+    }
+  </script>
+</body>
+</html>

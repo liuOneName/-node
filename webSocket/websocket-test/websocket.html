@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>websocket</title>
+  <style>
+    .info-btns {
+      display: none;
+    }
+
+    .msgs {
+      height: 200px;
+      border: 1px solid yellow;
+      background-color: #fff;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+    please enter your name：
+    <input type="text" placeholder="name" id='login' />
+    <button class="login">login</button>
+  </div>
+
+  <div class="info-btns">
+    <div class="msgs">
+
+    </div>
+    <input type="text" class="msg">
+    <button class="send">
+      send
+    </button>
+    <button class='close'>
+      leave
+    </button>
+
+  </div>
+  <script src="http://127.0.0.1:3000/socket.io/socket.io.js"></script>
+  <script>
+    const loginDiv = document.querySelector('.login-container');
+    const wsDiv = document.querySelector('.info-btns');
+    const msgDiv = document.querySelector('.msgs');
+    // 初始化 ws 及绑定发送和离开事件
+    function wsInit(val) {
+      window.ws = io.connect('http://127.0.0.1:3000');
+      ws.on('send', data => {
+        console.log(data);
+        console.log(ws.readyState);
+        insertMsg(data, 'left', 'me')
+      })
+      ws.on('connect', () => {
+        console.log('socket 连接成功，id为：' + ws.id);
+        ws.emit('login', val, () => {
+          loginDiv.style.display = 'none';
+          wsDiv.style.display = 'block';
+        })
+      })
+      ws.onclose = function () {
+        console.log('websocket is closed')
+      }
+      ws.onerror = function (err) {
+        console.log('websocket error:' + err);
+      }
+      document.querySelector('.send').addEventListener('click', () => {
+        console.log('send')
+        var val = document.querySelector('.msg').value;
+        // 前端的事件触发可以传多个参数，当然后天对应接收的参数也对应会增加接收参数的数量
+        ws.emit('message', val, insertMsg)
+      })
+      document.querySelector('.close').addEventListener('click', () => {
+        console.log('close')
+        ws.emit('leave', '离开')
+        console.log(ws.readyState);
+      })
+    }
+    // 登录事件
+    document.querySelector('.login').addEventListener('click', e => {
+      var val = document.querySelector('#login').value;
+      if (val) {
+        wsInit(val);
+
+      } else {
+        console.log('请输入用户名');
+      }
+    })
+    // 向聊天框插入消息
+    function insertMsg(val, pos = 'right', who) {
+      var div = document.createElement('div');
+      div.style.textAlign = pos;
+      div.innerText = val;
+      // var div = `<div style='text-align: ${pos}'>${val}<div>`;
+      msgDiv.appendChild(div);
+      if(who !== 'me'){
+        document.querySelector('.msg').value = '';
+      }
+    }
+  </script>
+</body>
+
+</html>

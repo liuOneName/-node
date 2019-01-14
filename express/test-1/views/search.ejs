@@ -1,0 +1,12 @@
+<h2>results for <%= search %></h2>
+<% if (results.length) { %>
+  <ul>
+    <% for (var i = 0; i < results.length; i++ ){ %>
+      <li>
+        <%= results[i].text %> - <%= results[i]['from_user'] %>
+      </li>
+    <% } %>
+  </ul>
+<% } else { %>
+  <p> no results</p>
+<% } %>

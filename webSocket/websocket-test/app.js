@@ -5,11 +5,11 @@ const ws = require('socket.io')(http);
 const sql = require('./dbConnect');
 const pool = sql.connect();
 pool.getConnection((err, connection) => {
-  if(err){
+  if (err) {
     console.log('connect err' + err.stack)
   } else {
     connection.query(`select * from user`, (err, res) => {
-      if(err){
+      if (err) {
         console.log('select err' + err.stack);
       } else {
         console.log(res);
@@ -27,7 +27,7 @@ ws.on('connection', socket => {
   //监听 message 事件
   socket.on('message', (data, fn) => {
     console.log(data, socket.id);
-    socket.broadcast.emit('send',data)
+    socket.broadcast.emit('send', data)
     fn && fn(data, 'right');
   })
   //监听离开事件 leave

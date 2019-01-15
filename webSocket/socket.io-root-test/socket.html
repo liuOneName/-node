@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>socket room</title>
+</head>
+<body>
+  please enter your name: <input type="text" />
+  <button>login</button>
+  <script src='http://127.0.0.1:3000/socket.io/socket.io.js'></script>
+  <script>
+    function initSocket(){
+      window.ws = io('http://127.0.0.1:3000')
+      ws.on('connect', () => {
+        console.log('连接成功');
+      })
+      ws.on('connect_error', (err) => console.log('连接失败：' + err.stack))
+    }
+    initSocket();
+  </script>
+</body>
+</html>

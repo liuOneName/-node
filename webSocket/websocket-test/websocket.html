@@ -46,14 +46,25 @@
     const loginDiv = document.querySelector('.login-container');
     const wsDiv = document.querySelector('.info-btns');
     const msgDiv = document.querySelector('.msgs');
+    // ws 代 on 的事件都是对后台 socket 触发的事件进行监听的。
+    // 不带 on 的事件则是对 当前页面的 socket 进行操作。
     // 初始化 ws 及绑定发送和离开事件
     function wsInit(val) {
-      window.ws = io.connect('http://127.0.0.1:3000');
+      // window.ws = io.connect('http://127.0.0.1:3000');
+      window.ws = io('http://127.0.0.1:3000'); // 上面这个写法 与这个写法好像一样
+      ws.on('disconnect', () => {
+        console.log('关闭，重连');
+        ws.open();
+      })
       ws.on('send', data => {
         console.log(data);
         console.log(ws.readyState);
         insertMsg(data, 'left', 'me')
       })
+      ws.on('connect_error', (err) => {console.log(err)}) // 链接时报错
+      ws.on('connect_timeout', (timeout) => {console.log(timeout)}) // 链接超时
+      ws.on('reconnect', num => console.log('重连次数: ' + num)) // 重连事件
+      ws.on('reconnect_attempt', num => console.log('重连失败次数: ' + num)); // 重连失败 // 反正重连也有对应的一套事件
       ws.on('connect', () => {
         console.log('socket 连接成功，id为：' + ws.id);
         ws.emit('login', val, () => {
@@ -66,15 +77,20 @@
       }
       ws.onerror = function (err) {
         console.log('websocket error:' + err);
-      }
+      } // 发生错误
+      ws.on('ping', () => console.log('ping')) // 好像是想服务器发送数据时调用
+      ws.on('pong', ms => console.log('ping ' + ms)) // 好像是每次消息的 ping 值, 不对，上一行和这一行的解释不对，不是发送数据时触发的。我猜应该是服务器 ping 值改变时调用。 
       document.querySelector('.send').addEventListener('click', () => {
         console.log('send')
         var val = document.querySelector('.msg').value;
         // 前端的事件触发可以传多个参数，当然后天对应接收的参数也对应会增加接收参数的数量
-        ws.emit('message', val, insertMsg)
+        ws.binary(false).emit('message', val, insertMsg)
+        // binary 方法指定数据中是否包含二进制，然后返回 socket 对象，所以能进行链式操作。指定之后会提升一定的性能
       })
       document.querySelector('.close').addEventListener('click', () => {
-        console.log('close')
+        console.log('close');
+        // ws.close();
+        ws.disconnect(); // 上面的这种写法与当行这种写法 效果是一样的，都是断开前端 socket 对后端 socket 的链接，当然会触发相应的后端关闭事件。
         ws.emit('leave', '离开')
         console.log(ws.readyState);
       })
@@ -94,7 +110,6 @@
       var div = document.createElement('div');
       div.style.textAlign = pos;
       div.innerText = val;
-      // var div = `<div style='text-align: ${pos}'>${val}<div>`;
       msgDiv.appendChild(div);
       if(who !== 'me'){
         document.querySelector('.msg').value = '';

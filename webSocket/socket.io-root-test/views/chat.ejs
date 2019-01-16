@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>chat-
+    <%= name %>
+  </title>
+  <style>
+    .chat-container{
+      display: none;
+    }
+  </style>
+  <script src='http://127.0.0.1:3000/socket.io/socket.io.js'></script>
+  <script>
+    function initSocket() {
+      window.ws = io('http://127.0.0.1:3000')
+      ws.on('connect', () => {
+        console.log('连接成功');
+      })
+      ws.on('connect_error', (err) => console.log('连接失败：' + err.stack))
+    }
+    initSocket();
+  </script>
+</head>
+
+<body>
+  <p>聊天室名称：
+    <%= name %>
+  </p>
+  <div class="login-container">
+      <input type="text" class="userName" />
+      <button class="login">确定</button>
+  </div>
+  <div class="chat-container">
+    <p class="user-name"></p>
+    <p>在线人数: </p>
+  </div>
+  <script>
+    window.onload = function () {
+      const input = document.querySelector('.userName');
+      const btn = document.querySelector('.login');
+      function show(){
+        document.querySelector('.login-container').style.display = 'none'
+        document.querySelector('.chat-container').style.display = 'block'
+        document.querySelector('.user-name').innerHTML = '用户名称：' + input.value.trim();
+      }
+      if(btn){
+        btn.addEventListener('click', function(){
+          const val = input.value.trim();
+          if(val){
+            ws.emit('join', val, show)
+          } else {
+            console.log('输入Name')
+          }
+        })
+      }
+    }
+  </script>
+</body>
+
+</html>

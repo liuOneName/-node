@@ -1,24 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>socket room</title>
 </head>
+
 <body>
-  please enter your name: <input type="text" />
-  <button>login</button>
+  房名：<input type="text" class='roomName' />
+  <button class='createRoom'>创建房间</button>
+  <h4>房间列表</h4>
+  <ul class='rooms'>
+    <li><a href="/chat/aini">爱你（默认房间）</a></li>
+  </ul>
   <script src='http://127.0.0.1:3000/socket.io/socket.io.js'></script>
   <script>
-    function initSocket(){
+    function initSocket() {
       window.ws = io('http://127.0.0.1:3000')
       ws.on('connect', () => {
         console.log('连接成功');
       })
       ws.on('connect_error', (err) => console.log('连接失败：' + err.stack))
     }
-    initSocket();
+    // initSocket();
+    // ajax 方法
+    function get(url, fn, data) {
+      var req = new XMLHttpRequest();
+      req.onreadystatechange = function (state) {
+        // console.log(state, req.readyState);
+        if (req.readyState === 4 && fn) {
+          // console.log(req.responseText)
+          fn.call(null, req.responseText)
+        }
+      }
+      if (data) {
+        req.open('GET', 'http://127.0.0.1:3000/' + url + '?' + data);
+      } else {
+        req.open('GET', 'http://127.0.0.1:3000/' + url);
+      }
+      req.send();
+
+    }
+    // 插入 rooms 
+    function renderRoom(data) {
+      data = JSON.parse(data)
+      const roomNames = Object.keys(data);
+      let lis = roomNames.map(val => (`<li><a href='/chat/${val}'>${val}</a></li>`))
+      const ul = document.querySelector('.rooms');
+      ul.innerHTML = lis.join('')
+    }
+    // 创建房间
+    document.querySelector('.createRoom').addEventListener('click', () => {
+      const val = document.querySelector('.roomName').value;
+      
+      if (val) {
+        get('createRoom', renderRoom, 'roomName=' + val);
+        document.querySelector('.roomName').value = ''
+      } else {
+        console.log('请输入房间名')
+      }
+
+    })
+    get('rooms', renderRoom);
+
   </script>
 </body>
+
 </html>

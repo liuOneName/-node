@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>mysql</title>
+</head>
+
+<body>
+  <script>
+    var User = (function () {
+      function save() {
+        const req = new XMLHttpRequest();
+        req.onreadystatechange = function (state) {
+          if (req.readyState === 4 && req.status === 200) {
+            console.log(req.responseText)
+          }
+        }
+        req.open('POST', 'http://127.0.01:3000/save');
+        req.setRequestHeader('Content-Type', 'application/json')
+        req.send(JSON.stringify({ name: 'Tom', age: 25 }));
+      }
+      function users(){
+        const req = new XMLHttpRequest();
+        req.onreadystatechange = function (state) {
+          if (req.readyState === 4 && req.status === 200) {
+            console.log(req.responseText)
+          }
+        }
+        req.open('get', 'http://127.0.01:3000/users');
+        req.setRequestHeader('Content-Type', 'application/json')
+        req.send();
+      }
+      function dele(){
+        const req = new XMLHttpRequest();
+        req.onreadystatechange = function (state) {
+          if (req.readyState === 4 && req.status === 200) {
+            console.log(req.responseText)
+          }
+        }
+        req.open('get', 'http://127.0.01:3000/delete?name=Tom');
+        req.setRequestHeader('Content-Type', 'application/json')
+        req.send();
+      }
+      function update(){
+        const req = new XMLHttpRequest();
+        req.onreadystatechange = function (state) {
+          if (req.readyState === 4 && req.status === 200) {
+            console.log(req.responseText)
+          }
+        }
+        req.open('get', 'http://127.0.01:3000/update?id=2&name=Jocke');
+        req.setRequestHeader('Content-Type', 'application/json')
+        req.send();
+      }
+      return {
+        save,
+        dele,
+        users,
+        update,
+      }
+    })()
+    User.dele();
+    // User.save();
+    // User.users();
+    // User.update();
+  </script>
+</body>
+
+</html>

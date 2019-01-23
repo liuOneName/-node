@@ -1,3 +1,6 @@
 /webSocket/websocket-test/node_modules
 /webSocket/socket.io-root-test/node_modules
+/mongodb/node_modules
 /webSocket/chatapp-demo
+/mysql/mysql-pool/node_modules
+/mysql/mysql-sequelize/node_modules

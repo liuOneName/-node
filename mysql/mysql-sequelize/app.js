@@ -25,7 +25,8 @@ const User = sequelize.define('user', {
     primaryKey: true,
     type: Sequelize.INTEGER
   },
-}, {
+},
+  {
     timestamps: false, // sequelize默认会自动为其添加 createdAt 和 updatedAt， 当定义 timestamps false 时可以去掉
     tableName: 'user', // 指定表名， 不写默认是 模型名加 `s` 
   })

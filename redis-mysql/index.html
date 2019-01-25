@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>redis-mysql</title>
+</head>
+<body>
+  <script>
+    const req = new XMLHttpRequest();
+    req.onreadystatechange = function(e){
+      if(req.status === 200 && req.readyState === 4){
+        console.log(req.responseText)
+      }
+    }
+    req.open('GET', 'http://127.0.01:3005/user/2');
+    req.setRequestHeader('Content-Type', 'application/json')
+    req.send();
+  </script>
+</body>
+</html>

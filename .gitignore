@@ -4,3 +4,5 @@
 /webSocket/chatapp-demo
 /mysql/mysql-pool/node_modules
 /mysql/mysql-sequelize/node_modules
+/redis-test/node_modules
+/redis-mysql/node_modules
